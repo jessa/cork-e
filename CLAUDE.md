@@ -28,7 +28,7 @@ share an origin, or the tools themselves decide demo vs. full at their own URL.
   self-hosted). The privacy policy on `full-site` says so; keep it true.
 - The privacy policy must be online **before** test families sign in
   (GDPR, and Google requires it for a production OAuth app). When it goes
-  back, check it still matches what `../platform` stores and where it runs.
+  back, check it still matches what `../cork-e-platform` stores and where it runs.
 - Contact address: info@cork-e.eu. Data controller: Jessa Bekker (private
   person) until a business is registered.
 - Preview on port 8710 (`python3 -m http.server 8710 --bind 127.0.0.1`).

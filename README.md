@@ -57,5 +57,5 @@ set that up in Combell's web-forwarding settings.
 ## Privacy policy
 
 The privacy policy (on `full-site`) must be published before test families
-sign in. It describes what the backend in `../platform` stores and where it is
+sign in. It describes what the backend in `../cork-e-platform` stores and where it is
 hosted (EU); when either changes, update both language versions and the date.
