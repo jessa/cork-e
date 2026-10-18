@@ -9,10 +9,18 @@ GitHub Pages setup. Workspace-wide context (brand, vision, hosting plan) is in
 `main` is a deliberately bare page: logo and name, no information about the
 tools or the audience, `noindex`. The owner doesn't want to publish more yet.
 
-The full landing page and the privacy policy (Dutch + English) are kept on the
-local branch **`full-site`**. Do not push that branch while the repo is public:
-anything pushed to a public repo is readable on GitHub even if Pages doesn't
-serve it.
+The **privacy policy** (Klok + Kalender) is on `main`: `privacy.html` (Dutch),
+`en/privacy.html` (English), `privacy.css`, linked from the placeholder. It was
+written on 2026-10-18 from the actual code and server (tables in
+`../cork-e-platform/corke/db.py`, Google scopes in `corke/gcal.py`, cookies in
+`corke/auth.py`, no visitor IP logging, backups 30 days). Re-check it against
+those whenever data, cookies, Google scopes, processors or hosting change, and
+update the date and both languages.
+
+The full landing page is kept on the local branch **`full-site`** (its own,
+older privacy text there is superseded by `main`). Do not push that branch
+while the repo is public: anything pushed to a public repo is readable on
+GitHub even if Pages doesn't serve it.
 
 ## Planned next version of the page
 
@@ -25,7 +33,7 @@ share an origin, or the tools themselves decide demo vs. full at their own URL.
 ## Conventions
 
 - Plain HTML/CSS, no build step, no cookies, no third-party requests (fonts are
-  self-hosted). The privacy policy on `full-site` says so; keep it true.
+  self-hosted). The privacy policy says so; keep it true.
 - The privacy policy must be online **before** test families sign in
   (GDPR, and Google requires it for a production OAuth app). When it goes
   back, check it still matches what `../cork-e-platform` stores and where it runs.
