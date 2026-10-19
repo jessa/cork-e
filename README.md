@@ -1,61 +1,57 @@
 # cork-e.eu
 
-The public website of Cork-e. For now a placeholder page with only the logo
-and name. Plain HTML and CSS, no build step, served by GitHub Pages.
+The public website of Cork-e: a placeholder page (logo + name) and the privacy
+policy (Dutch + English). Plain HTML and CSS, no build step. Served by the
+server's shared Caddy (`../server`), next to `app.cork-e.eu`.
 
 ```
-index.html        placeholder page
-style.css         styles; palette from KinderKlok
-logo.svg          logo and favicon
-fonts/            Nunito ExtraBold (SIL Open Font License, see fonts/OFL.txt)
-CNAME             custom domain for GitHub Pages
-.nojekyll         serve files as-is, without Jekyll
+site/                      what is published (index.html, privacy.html, en/, styles, fonts, logo)
+deploy/cork-e-site.caddy   Caddy site file for cork-e.eu and www.cork-e.eu
+deploy/deploy.sh           upload site/ + the Caddy file and reload Caddy (from the Mac)
+.github/workflows/         uploads site/ on every push to main (restricted key)
 ```
 
-The full landing page and privacy policy (Dutch + English) are on the local
-branch `full-site`. Keep that branch local while the repo is public.
+## URL rules (deploy/cork-e-site.caddy)
+
+| Request | Result |
+|---|---|
+| `www.cork-e.eu/…` | 301 → `cork-e.eu/…` |
+| `cork-e.eu/klok`, `/klok/…` (also via www) | 301 → `app.cork-e.eu/klok/…`, path and query kept |
+| `cork-e.eu/kalender`, `/kalender/…` (also via www) | 301 → `app.cork-e.eu/kalender/…` |
+| anything else | the file from `site/`; a folder without `/` gets a redirect to `…/` |
+
+(The trailing-slash rule for `app.cork-e.eu/klok/…` lives in
+`../cork-e-platform/deploy/cork-e.caddy`.)
 
 ## Preview locally
 
 ```bash
-python3 -m http.server 8710 --bind 127.0.0.1
+python3 -m http.server 8710 --bind 127.0.0.1 --directory site
 ```
 
-Then open http://localhost:8710.
+## Deploy
 
-## Publish on GitHub Pages (one-time)
+```bash
+deploy/deploy.sh
+```
 
-1. Create a **public** repo `cork-e` on GitHub and push only `main`
-   (`git push -u origin main`).
-   (GitHub Pages on a private repo needs a paid plan.)
-2. Repo **Settings → Pages**: Source = *Deploy from a branch*, branch `main`,
-   folder `/ (root)`. The custom domain `cork-e.eu` is picked up from `CNAME`.
-3. In **Combell → DNS** for `cork-e.eu`, remove any existing A/AAAA records for
-   the bare domain and `www`, then add:
+## Automatic deploys (GitHub Actions)
 
-   | Type | Name | Value |
-   |---|---|---|
-   | A | `@` | `185.199.108.153` |
-   | A | `@` | `185.199.109.153` |
-   | A | `@` | `185.199.110.153` |
-   | A | `@` | `185.199.111.153` |
-   | AAAA | `@` | `2606:50c0:8000::153` |
-   | AAAA | `@` | `2606:50c0:8001::153` |
-   | AAAA | `@` | `2606:50c0:8002::153` |
-   | AAAA | `@` | `2606:50c0:8003::153` |
-   | CNAME | `www` | `jessa.github.io.` |
+`.github/workflows/deploy.yml` uploads `site/` when it changes on `main`. Its
+key may only rsync into `/opt/www/cork-e/site`. One-time setup:
 
-   Leave the **MX** (mail) records alone.
-4. Once GitHub shows the domain as verified (can take up to an hour), tick
-   **Enforce HTTPS** in Settings → Pages.
-5. Recommended: verify `cork-e.eu` for your GitHub account
-   (GitHub **Settings → Pages → Add a domain**), so nobody else can claim it.
-
-`cork-e.be` and `cork-e.com` should redirect (301) to `https://cork-e.eu`;
-set that up in Combell's web-forwarding settings.
+1. Make a key pair just for this (no passphrase), on the Mac:
+   `ssh-keygen -t ed25519 -N "" -C github-actions-cork-e -f ~/.ssh/cork-e-site-deploy`
+2. On the server, append to `/home/deploy/.ssh/authorized_keys` (one line):
+   `command="/usr/bin/rrsync /opt/www/cork-e/site",restrict ssh-ed25519 AAAA… github-actions-cork-e`
+   (the `AAAA…` part from `~/.ssh/cork-e-site-deploy.pub`).
+3. In GitHub, repo **Settings → Secrets and variables → Actions**, add:
+   - `DEPLOY_SSH_KEY`: the contents of `~/.ssh/cork-e-site-deploy` (the private key);
+   - `DEPLOY_KNOWN_HOSTS`: the output of `ssh-keyscan -t ed25519 app.cork-e.eu`.
+4. Run the workflow once by hand (**Actions → Deploy cork-e.eu → Run workflow**).
 
 ## Privacy policy
 
-The privacy policy (on `full-site`) must be published before test families
-sign in. It describes what the backend in `../cork-e-platform` stores and where it is
-hosted (EU); when either changes, update both language versions and the date.
+`site/privacy.html` and `site/en/privacy.html` describe what
+`../cork-e-platform` stores and where it runs. When either changes, update
+both languages and the date.

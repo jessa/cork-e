@@ -1,0 +1,35 @@
+# Upload site/ to the server whenever it changes on main.
+#
+# The key in DEPLOY_SSH_KEY can do one thing only: rsync into
+# /opt/www/cork-e/site (forced rrsync command in the server's authorized_keys,
+# see README "Automatic deploys"). Caddy's site file is deployed by hand with
+# deploy/deploy.sh, never from here.
+name: Deploy cork-e.eu
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**"]
+  workflow_dispatch:
+
+concurrency: deploy-site
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload site/ to the server
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          # The server maps the destination to /opt/www/cork-e/site.
+          rsync -rlz --delete --exclude .DS_Store \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            site/ deploy@app.cork-e.eu:./

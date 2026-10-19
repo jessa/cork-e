@@ -1,0 +1,28 @@
+# cork-e.eu and www.cork-e.eu: the public website (site/ in this repo), served
+# by the server's shared Caddy (../server). Uploaded by deploy/deploy.sh to
+# /opt/edge/sites/cork-e-site.caddy; the files go to /opt/www/cork-e/site.
+
+# The tools live on app.cork-e.eu: send /klok and /kalender there, keeping
+# the rest of the path and the query (cork-e.eu/klok/help → app.cork-e.eu/klok/help).
+(cork_e_tools_to_app) {
+	redir /klok https://app.cork-e.eu/klok/ 301
+	redir /klok/* https://app.cork-e.eu{uri} 301
+	redir /kalender https://app.cork-e.eu/kalender/ 301
+	redir /kalender/* https://app.cork-e.eu{uri} 301
+}
+
+www.cork-e.eu {
+	import cork_e_tools_to_app
+	redir https://cork-e.eu{uri} 301
+}
+
+cork-e.eu {
+	import security_headers
+	encode zstd gzip
+	import cork_e_tools_to_app
+
+	# Static files. A folder without its trailing slash (/en) is redirected to
+	# /en/ by file_server itself, then its index.html is served.
+	root * /srv/cork-e/site
+	file_server
+}

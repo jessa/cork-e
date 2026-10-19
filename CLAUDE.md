@@ -1,7 +1,8 @@
 # cork-e.eu website: context for Claude
 
-Public website of Cork-e. See README.md for the file layout, local preview and
-GitHub Pages setup. Workspace-wide context (brand, vision, hosting plan) is in
+Public website of Cork-e, served from the VPS by the shared Caddy (not GitHub
+Pages any more). See README.md for the layout, URL rules, deploying and the
+GitHub Action. Workspace-wide context (brand, vision, hosting plan) is in
 `../CLAUDE.md`.
 
 ## Current state: placeholder only
@@ -9,8 +10,9 @@ GitHub Pages setup. Workspace-wide context (brand, vision, hosting plan) is in
 `main` is a deliberately bare page: logo and name, no information about the
 tools or the audience, `noindex`. The owner doesn't want to publish more yet.
 
-The **privacy policy** (Klok + Kalender) is on `main`: `privacy.html` (Dutch),
-`en/privacy.html` (English), `privacy.css`, linked from the placeholder. It was
+The **privacy policy** (Klok + Kalender) is on `main`: `site/privacy.html`
+(Dutch), `site/en/privacy.html` (English), `site/privacy.css`, linked from the
+placeholder. It was
 written on 2026-10-18 from the actual code and server (tables in
 `../cork-e-platform/corke/db.py`, Google scopes in `corke/gcal.py`, cookies in
 `corke/auth.py`, no visitor IP logging, backups 30 days). Re-check it against
@@ -39,4 +41,9 @@ share an origin, or the tools themselves decide demo vs. full at their own URL.
   back, check it still matches what `../cork-e-platform` stores and where it runs.
 - Contact address: info@cork-e.eu. Data controller: Jessa Bekker (private
   person) until a business is registered.
-- Preview on port 8710 (`python3 -m http.server 8710 --bind 127.0.0.1`).
+- Preview on port 8710 (`python3 -m http.server 8710 --bind 127.0.0.1 --directory site`).
+- Only `site/` is published. The GitHub Action's key can only write into
+  `/opt/www/cork-e/site`; Caddy changes (`deploy/cork-e-site.caddy`) go by hand
+  with `deploy/deploy.sh`.
+- `/klok` and `/kalender` on cork-e.eu redirect to app.cork-e.eu; never put
+  files under `site/klok/` or `site/kalender/`.
