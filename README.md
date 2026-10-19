@@ -5,7 +5,7 @@ policy (Dutch + English). Plain HTML and CSS, no build step. Served by the
 server's shared Caddy (`../server`), next to `app.cork-e.eu`.
 
 ```
-site/                      what is published (index.html, privacy.html, en/, styles, fonts, logo)
+site/                      what is published (index.html, privacy*.html, en/, styles, fonts, logo)
 deploy/cork-e-site.caddy   Caddy site file for cork-e.eu and www.cork-e.eu
 deploy/deploy.sh           upload site/ + the Caddy file and reload Caddy (from the Mac)
 .github/workflows/         uploads site/ on every push to main (restricted key)
@@ -52,6 +52,14 @@ key may only rsync into `/opt/www/cork-e/site`. One-time setup:
 
 ## Privacy policy
 
-`site/privacy.html` and `site/en/privacy.html` describe what
-`../cork-e-platform` stores and where it runs. When either changes, update
-both languages and the date.
+Three pages, each in Dutch (`site/`) and English (`site/en/`):
+
+| Page | Covers | Link from |
+|---|---|---|
+| `privacy.html` | Cork-e itself: controller, account and cookies, family and children, processors, rights, deletion | Google's OAuth consent screen, the placeholder, both tools |
+| `privacy-klok.html` | routines, the copy on the device, Chromecast | KinderKlok |
+| `privacy-kalender.html` | people and photos, calendar settings, pictures, Google Calendar (scopes, Limited Use) | KinderKalender |
+
+Not every Klok user uses the Kalender, so tool-specific data stays on the tool's
+page. They describe what `../cork-e-platform` stores and where it runs. When
+that changes, update both languages and the date.

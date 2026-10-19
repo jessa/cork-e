@@ -10,9 +10,11 @@ GitHub Action. Workspace-wide context (brand, vision, hosting plan) is in
 `main` is a deliberately bare page: logo and name, no information about the
 tools or the audience, `noindex`. The owner doesn't want to publish more yet.
 
-The **privacy policy** (Klok + Kalender) is on `main`: `site/privacy.html`
-(Dutch), `site/en/privacy.html` (English), `site/privacy.css`, linked from the
-placeholder. It was
+The **privacy policy** is on `main`, split in three (2026-10-19), because not
+every Klok user uses the Kalender: `site/privacy.html` (Cork-e: account, family,
+rights; the URL Google's consent screen links to, keep it stable),
+`site/privacy-klok.html` and `site/privacy-kalender.html`, each mirrored in
+`site/en/`, styled by `site/privacy.css`. It was
 written on 2026-10-18 from the actual code and server (tables in
 `../cork-e-platform/corke/db.py`, Google scopes in `corke/gcal.py`, cookies in
 `corke/auth.py`, no visitor IP logging, backups 30 days). Re-check it against
