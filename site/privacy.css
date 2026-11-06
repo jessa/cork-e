@@ -7,12 +7,12 @@
 }
 
 :root {
-  --bg: #f7f3ec;
-  --paper: #fffcf6;
-  --ink: #4a4038;
-  --soft: #7a6d61;
-  --line: #e6dccd;
-  --link: #4a90d9;
+  --bg: #eef2f6;
+  --paper: #ffffff;
+  --ink: #1f2a44;
+  --soft: #5b6b84;
+  --line: #d9e1ea;
+  --link: #3a6fb0;
 }
 
 * { box-sizing: border-box; }
